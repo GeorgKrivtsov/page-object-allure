@@ -19,8 +19,6 @@ public class BasePage {
         PageFactory.initElements(driverManager.getDriver(), this);
     }
 
-
-
     protected WebElement waitUtilElementToBeClickable(WebElement element) {
         return wait.until(ExpectedConditions.elementToBeClickable(element));
     }

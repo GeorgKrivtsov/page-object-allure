@@ -37,10 +37,12 @@ public class DriverManager {
         switch (temp) {
             case 2:
                 System.out.println("Launching Safari");
+                WebDriverManager.safaridriver().setup();
                 driver = new SafariDriver();
                 break;
             case 3:
                 System.out.println("Launching Firefox");
+                WebDriverManager.firefoxdriver().setup();
                 driver = new FirefoxDriver();
                 break;
             default:

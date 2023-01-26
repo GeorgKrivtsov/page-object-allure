@@ -32,7 +32,7 @@ public class DriverManager {
 
     private void initDriver() {
 
-        int temp = Integer.parseInt(System.getProperty("browser", "1"));
+        int temp = Integer.parseInt(System.getProperty("browser", "3"));
 
         switch (temp) {
             case 2:

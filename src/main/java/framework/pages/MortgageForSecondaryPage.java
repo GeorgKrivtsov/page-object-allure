@@ -1,5 +1,6 @@
 package framework.pages;
 
+import framework.managers.DriverManager;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
@@ -32,15 +33,6 @@ public class MortgageForSecondaryPage extends BasePage {
     private List<WebElement> listOfInputFields;
 
 
-
-
-
-
-
-
-
-
-
 //    public void setInputFields(String name, String count){
 //        driverManager.getDriver().switchTo().frame("iFrameResizer0");
 //        for (WebElement field : inputFields) {
@@ -55,8 +47,16 @@ public class MortgageForSecondaryPage extends BasePage {
 //        driverManager.getDriver().switchTo().defaultContent();
 //
 //    }
-    @Step()
-    public void findForm(String nameOfForm, String parametersToFill){
+
+    public MortgageForSecondaryPage skrollToElement(){
+        WebElement h2 = DriverManager.getInstance().getDriver().findElement(By.xpath("//h2[contains(text(), 'Рассчитайте ипотеку')]"));
+        pageManager.getMortgageForSecondaryPage().scrollWithOffset(h2,0, 350);
+        return this;
+    }
+
+    @Step("Заполняем поле '{nameOfForm}' значением '{parametersToFill}'")
+    public MortgageForSecondaryPage findForm(String nameOfForm, String parametersToFill){
+        driverManager.getDriver().switchTo().frame("iFrameResizer0");
         for(WebElement form :listOfInputFields) {
             if(form.findElement(By.xpath("./label")).getText().contains(nameOfForm)) {
                 WebElement field = form.findElement(By.xpath(".//input"));
@@ -67,22 +67,21 @@ public class MortgageForSecondaryPage extends BasePage {
                 waitStabilityPage(5000, 250);
                 Assertions.assertEquals(parametersToFill, field.getAttribute("value").replaceAll("[^0-9]", ""),
                         "Поле заполнилось не корректно");
+
+                driverManager.getDriver().switchTo().defaultContent();
+                return this;
             }
         }
         Assertions.fail("Поле не найдено");
+        return this;
     }
+
 
     public void sendKeysByOneChar(WebElement element, String value){
         String[] string = value.split("");
         Actions actions = new Actions(driverManager.getDriver());
         for(String charItem : string) {
-            actions.moveToElement(element)
-                    .pause(100)
-                    .click(element)
-                    .sendKeys(charItem)
-                    .pause(100)
-                    .build()
-                    .perform();
+            actions.moveToElement(element).pause(100).sendKeys(charItem).pause(100).build().perform();
         }
     }
 
@@ -104,31 +103,38 @@ public class MortgageForSecondaryPage extends BasePage {
     }
 
 
-    public void clickOnServicesCheckbox(String nameServices) {
+    @Step("Кликаем чекбокс '{nameServices}'")
+    public MortgageForSecondaryPage clickOnServicesCheckbox(String nameServices) {
         driverManager.getDriver().switchTo().frame("iFrameResizer0");
         for (WebElement itemService: listServices) {
             WebElement nameService = itemService.findElement(By.xpath("./span"));
             if(nameService.getText().contains(nameServices)) {
                 WebElement checkbox = itemService.findElement(By.xpath("./span/label/div/input"));
                 ((JavascriptExecutor) driverManager.getDriver()).executeScript("arguments[0].click();", checkbox);
+                driverManager.getDriver().switchTo().defaultContent();
+                return this;
             }
         }
-        driverManager.getDriver().switchTo().defaultContent();
+        return this;
     }
 
 
-    public void checkCreditDetails(String name, double count) {
-//        driverManager.getDriver().switchTo().frame("iFrameResizer0");
+    @Step("Проверяем значение '{name}' c введенным значение '{count}' ")
+    public MortgageForSecondaryPage checkCreditDetails(String name, double count) {
+        driverManager.getDriver().switchTo().frame("iFrameResizer0");
         for (WebElement creditDetail : listCreditDetails) {
             if(creditDetail.getText().equalsIgnoreCase(name)) {
                 WebElement countCreditDetail = creditDetail.findElement(By.xpath("./../div/span/span"));
                 countCreditDetail.getText().replaceAll("[^0-9]", "");
-                Assertions.assertEquals(Integer.parseInt(countCreditDetail.getText().replaceAll("[^0-9]", "")), count, "Значения " +
-                        creditDetail.getText() + "не равны");
+                Assertions.assertEquals(Integer.parseInt(countCreditDetail.getText().replaceAll("[^0-9]", "")), count, "Значения \"" +
+                        creditDetail.getText() + "\" не равны");
+                driverManager.getDriver().switchTo().defaultContent();
+                return this;
             }
         }
-//        driverManager.getDriver().switchTo().defaultContent();
+
         Assertions.fail("Элемент не найден");
+        return this;
     }
 
     public WebElement scrollWithOffset(WebElement element, int x, int y) {

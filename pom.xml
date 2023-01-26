@@ -16,7 +16,7 @@
         <file.encoding>${encoding.type}</file.encoding>
 
         <!--   Java version     -->
-        <java.version>11</java.version>
+        <java.version>8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
@@ -29,7 +29,7 @@
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
         <allure-maven.version>2.10.0</allure-maven.version>
-        <allure-junit5.version>2.20.1</allure-junit5.version>
+        <allure-junit5.version>2.13.6</allure-junit5.version>
         <aspectj.version>1.9.7</aspectj.version>
 
     </properties>
@@ -68,7 +68,6 @@
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
             <version>${junit-platform-launcher.version}</version>
-            <scope>test</scope>
         </dependency>
 
 
@@ -79,13 +78,10 @@
             <version>${allure-junit5.version}</version>
         </dependency>
 
-
-
     </dependencies>
 
     <build>
         <plugins>
-
             <!--      Плагин, который отвечает за компиляцию как тестов так и в целом всех Java-классов      -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -105,30 +101,32 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
-                    <failIfNoTests>false</failIfNoTests>
+<!--                    <failIfNoTests>false</failIfNoTests>-->
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
                     <argLine>
                         -Xmx1024m
                         -Dfile.encoding=${encoding.type}
+                        -Djunit.jupiter.extensions.autodetection.enabled=true
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.build.directory}/reports/allure-results</allure.results.directory>
+                    </systemPropertyVariables>
                     <properties>
                         <property>
                             <name>listener</name>
-                            <value>io.qameta.allure.junit5.AllureJunit5</value>
+                            <value>framework.utils.MyAllureListener</value>
+<!--                            <value>io.qameta.allure.junit5.AllureJunit5</value>-->
                         </property>
                     </properties>
-                    <systemPropertyVariables>
-                            <allure.results.directory>${project.build.directory}/reports/allure-results</allure.results.directory>
-                    </systemPropertyVariables>
-                    <systemProperties>
-                        <property>
-                            <name>junit.jupiter.extensions.autodetection.enabled</name>
-                            <value>true</value>
-                        </property>
-                    </systemProperties>
+<!--                    <systemProperties>-->
+<!--                        <property>-->
+<!--                            <name>junit.jupiter.extensions.autodetection.enabled</name>-->
+<!--                            <value>true</value>-->
+<!--                        </property>-->
+<!--                    </systemProperties>-->
                 </configuration>
                 <dependencies>
 
@@ -152,7 +150,7 @@
                 <artifactId>allure-maven</artifactId>
                 <version>${allure-maven.version}</version>
                 <configuration>
-                    <reportVersion>2.10.0</reportVersion>
+                    <reportVersion>${allure-maven.version}</reportVersion>
                     <resultsDirectory>${project.build.directory}/reports/allure-results</resultsDirectory>
                     <reportDirectory>${project.build.directory}/reports/allure-reports</reportDirectory>
                 </configuration>
@@ -167,11 +165,11 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                <version>${maven-dependency-plugin.version}</version>-->
+<!--            </plugin>-->
 
         </plugins>
     </build>

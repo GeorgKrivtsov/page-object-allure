@@ -61,7 +61,7 @@ public class MortgageForSecondaryPage extends BasePage {
             if(form.findElement(By.xpath("./label")).getText().contains(nameOfForm)) {
                 WebElement field = form.findElement(By.xpath(".//input"));
                 field.click();
-                field.sendKeys(Keys.CONTROL + "a"); //изменя копку контрл
+                field.sendKeys(Keys.COMMAND + "a"); //изменя копку контрл
                 field.sendKeys(Keys.BACK_SPACE);
                 sendKeysByOneChar(field, parametersToFill);
                 waitStabilityPage(5000, 250);

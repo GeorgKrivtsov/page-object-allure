@@ -37,46 +37,46 @@ public class DriverManager {
         return driver;
     }
 
-    private void initDriver() {
+//    private void initDriver() {
 
-        String temp = System.getProperty("browser", "Chrome");
-
-        switch (temp) {
-            case "Safari":
-                System.out.println("Launching Safari");
-                WebDriverManager.safaridriver().setup();
-                driver = new SafariDriver();
-                break;
-            case "Firefox":
-                System.out.println("Launching Firefox");
-                WebDriverManager.firefoxdriver().setup();
-                driver = new FirefoxDriver();
-                break;
-            case "remote":
-                DesiredCapabilities capabilities = new DesiredCapabilities();
-                capabilities.setCapability("browserName", "chrome");
-                capabilities.setCapability("browserVersion", "109.0");
-                capabilities.setCapability("selenoid:options", Map.<String, Object>of(
-                        "enableVNC", true,
-                        "enableVideo", true
-                ));
-                try {
-                    driver = new RemoteWebDriver(
-                            URI.create("http://selenoid:4444/wd/hub").toURL(),
-                            capabilities
-                    );
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
-                }
-
-            default:
-                System.out.println("Launching Chrome");
-                WebDriverManager.chromedriver().setup();
-                driver = new ChromeDriver();
-                break;
-        }
-
-    }
+//        String temp = System.getProperty("browser", "Chrome");
+//
+//        switch (temp) {
+//            case "Safari":
+//                System.out.println("Launching Safari");
+//                WebDriverManager.safaridriver().setup();
+//                driver = new SafariDriver();
+//                break;
+//            case "Firefox":
+//                System.out.println("Launching Firefox");
+//                WebDriverManager.firefoxdriver().setup();
+//                driver = new FirefoxDriver();
+//                break;
+//            case "remote":
+//                DesiredCapabilities capabilities = new DesiredCapabilities();
+//                capabilities.setCapability("browserName", "chrome");
+//                capabilities.setCapability("browserVersion", "109.0");
+//                capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+//                        "enableVNC", true,
+//                        "enableVideo", true
+//                ));
+//                try {
+//                    driver = new RemoteWebDriver(
+//                            URI.create("http://selenoid:4444/wd/hub").toURL(),
+//                            capabilities
+//                    );
+//                } catch (MalformedURLException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//            default:
+//                System.out.println("Launching Chrome");
+//                WebDriverManager.chromedriver().setup();
+//                driver = new ChromeDriver();
+//                break;
+//        }
+//
+//    }
 
     private static void initRemoteDriver() {
         String browser = System.getProperty("browser", "chrome");

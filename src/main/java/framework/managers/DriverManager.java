@@ -4,7 +4,13 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.Map;
 
 public class DriverManager {
 
@@ -17,14 +23,14 @@ public class DriverManager {
     }
 
     public static DriverManager getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new DriverManager();
         }
         return INSTANCE;
     }
 
-    public WebDriver getDriver(){
-        if(driver == null) {
+    public WebDriver getDriver() {
+        if (driver == null) {
             initDriver();
         }
         return driver;
@@ -32,7 +38,7 @@ public class DriverManager {
 
     private void initDriver() {
 
-        int temp = Integer.parseInt(System.getProperty("browser", "3"));
+        int temp = Integer.parseInt(System.getProperty("browser", "Chrome"));
 
         switch (temp) {
             case 2:
@@ -45,6 +51,23 @@ public class DriverManager {
                 WebDriverManager.firefoxdriver().setup();
                 driver = new FirefoxDriver();
                 break;
+            case "remote":
+                DesiredCapabilities capabilities = new DesiredCapabilities();
+                capabilities.setCapability("browserName", "chrome");
+                capabilities.setCapability("browserVersion", "109.0");
+                capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+                        "enableVNC", true,
+                        "enableVideo", true
+                ));
+                try {
+                    driver = new RemoteWebDriver(
+                            URI.create("http://selenoid:4444/wd/hub").toURL(),
+                            capabilities
+                    );
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+
             default:
                 System.out.println("Launching Chrome");
                 WebDriverManager.chromedriver().setup();
@@ -55,7 +78,7 @@ public class DriverManager {
     }
 
     public void quitDriver() {
-        if(driver != null) {
+        if (driver != null) {
             driver.quit();
             driver = null;
         }

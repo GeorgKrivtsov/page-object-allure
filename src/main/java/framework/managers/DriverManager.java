@@ -38,15 +38,15 @@ public class DriverManager {
 
     private void initDriver() {
 
-        int temp = Integer.parseInt(System.getProperty("browser", "Chrome"));
+        String temp = System.getProperty("browser", "Chrome");
 
         switch (temp) {
-            case 2:
+            case "Safari":
                 System.out.println("Launching Safari");
                 WebDriverManager.safaridriver().setup();
                 driver = new SafariDriver();
                 break;
-            case 3:
+            case "Firefox":
                 System.out.println("Launching Firefox");
                 WebDriverManager.firefoxdriver().setup();
                 driver = new FirefoxDriver();
